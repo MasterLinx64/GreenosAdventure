@@ -88,7 +88,10 @@ public class PlayerMovement : MonoBehaviour {
 		);
         if (Input.GetButton("Run"))
         {
-            anim.SetBool("PlayerRunning", true);
+        	if (isGrounded()) {
+         	anim.SetBool("PlayerWalking", false);
+            anim.SetBool("PlayerRunning", true);       		
+        	}
             MovementSpeed = 60;
 
         } else {
