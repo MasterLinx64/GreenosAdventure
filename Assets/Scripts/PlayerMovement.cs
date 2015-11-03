@@ -3,7 +3,7 @@ using System.Collections;
 
 public class PlayerMovement : MonoBehaviour {
     public Transform Player;
-	public float MovementSpeed;
+	public float MovementSpeed = 37;
 	public Vector2 vel;
 	public float rayHeight;
 	public float jumpHeight;
@@ -12,7 +12,7 @@ public class PlayerMovement : MonoBehaviour {
  
 	private bool facingRight;
 	private bool canFlip;
-	public bool test;
+	public bool grounded;
 	public bool HorizontalColition;
     AudioSource playerAudio;
         bool isGrounded(){
@@ -56,14 +56,14 @@ public class PlayerMovement : MonoBehaviour {
 	// Update is called once per frame
 	void Update () {
 		HorizontalColition = isWalled();
-		test = isGrounded();
+		grounded = isGrounded();
 		float isMoving = Input.GetAxis ("Horizontal");
 		if (isMoving != 0 && isGrounded()) {
 			    anim.SetBool ("PlayerJumping", false);
 				anim.SetBool ("PlayerWalking", true);
 		} else if (!isGrounded()) {
 			anim.SetBool ("PlayerJumping", true);
-		} else {
+           } else {
 			anim.SetBool ("PlayerJumping", false);
 			anim.SetBool ("PlayerWalking", false);
 		}
@@ -77,12 +77,8 @@ public class PlayerMovement : MonoBehaviour {
 			canFlip = true;
 		}
 
-        if (Input.GetButtton("Jump") && isGrounded()) {
+        if (Input.GetButton("Jump") && isGrounded()) {
             playerAudio.Play();
-        }
-        if (Player.position.y < -25f)
-        {
-            Application.LoadLevel(0);  
         }
 		vel = GetComponent<Rigidbody2D>().velocity;
 		GetComponent<Rigidbody2D>().velocity = new Vector2
@@ -90,6 +86,14 @@ public class PlayerMovement : MonoBehaviour {
 	/*X	*/	Input.GetAxis("Horizontal") * MovementSpeed,
 	/*Y*/	 (isGrounded() && Input.GetButton("Jump")) ? jumpHeight : GetComponent<Rigidbody2D>().velocity.y
 		);
+        if (Input.GetButton("Run"))
+        {
+            anim.SetBool("PlayerRunning", true);
+            MovementSpeed = 60;
 
+        } else {
+            anim.SetBool("PlayerRunning", false);
+            MovementSpeed = 39;
+        }
 	}
 }
